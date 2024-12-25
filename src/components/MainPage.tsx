@@ -8,7 +8,7 @@ import { saveData, getData } from "../services/firebase";
 import { generateUniqueId } from "../services/idGenerator";
 import Footer from "./Footer";
 import Header from "./Header";
-import heroBackground from "../assets/Hero-Background-notecode@2x.png";
+import heroBackground from "../assets/Hero-Background-notecode.svg";
 import { useParams } from "react-router-dom";
 import { MutatingDots } from "react-loader-spinner";
 
@@ -90,20 +90,20 @@ const MainPage = () => {
       <div className="fixed inset-0 bg-custom-gradient"></div>
       <img
         src={heroBackground}
-        className="object-cover absolute -z-5 w-full min-h-[70svh]"
+        className="object-cover -top-1/4 absolute -z-5 w-full h-full min-h-[70svh]"
         alt="Hero Background"
       />
-      <div className="flex flex-col items-center h-full mb-10">
+      <div className="flex flex-col items-center mb-10">
         <Header />
         <main
-          className={`flex flex-col p-5 mt-10 relative z-10 w-[calc(100%-5rem)] max-w-[800px] min-h-[700px] rounded-xl transition-colors ${
-            theme === "dark" ? "bg-dark-gray" : "bg-white"
+          className={`flex flex-col p-5 mt-10 relative z-10 w-[90%] max-w-[1000px] h-[60svh] rounded-xl overflow-auto transition-colors ${
+            theme === "dark" ? "bg-dark-gray dark-theme" : "bg-white"
           }`}
         >
-          <section className="flex justify-center items-center">
+          <section className="flex justify-center items-center flex-grow overflow-auto pb-3 rounded-md">
             {isLoading ? (
               <MutatingDots
-                wrapperStyle={{ "padding-top": "5rem" }}
+                wrapperStyle={{ paddingTop: "5rem" }}
                 visible={true}
                 height="100"
                 width="100"
@@ -112,13 +112,15 @@ const MainPage = () => {
                 radius="12"
               />
             ) : (
-              <CodeMirror
-                style={{ width: "100%" }}
-                value={code}
-                theme={theme}
-                extensions={[loadLanguage(language)!, customTheme]}
-                onChange={(value) => setCode(value)}
-              />
+              <div className="w-full h-full overflow-auto">
+                <CodeMirror
+                  style={{ height: "100%", width: "100%" }}
+                  value={code}
+                  theme={theme}
+                  extensions={[loadLanguage(language)!, customTheme]}
+                  onChange={(value) => setCode(value)}
+                />
+              </div>
             )}
           </section>
           <Footer
