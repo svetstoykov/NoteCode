@@ -47,7 +47,7 @@ const DropdownButton = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-1 mr-4 rounded-2xl items-center justify-center flex bg-gray-300 hover:bg-gray-300/80 transition-colors duration-300"
+        className="px-4 py-1 rounded-2xl items-center justify-center flex bg-gray-300 hover:bg-gray-300/80 transition-colors duration-300"
       >
         <span className="text-sm">{selectedLabel}</span>
         <img

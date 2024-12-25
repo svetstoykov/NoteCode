@@ -31,7 +31,7 @@ function App() {
 
   const customTheme = EditorView.theme({
     ".cm-gutters": {
-      backgroundColor: "transparent",
+      backgroundColor: "white",
     },
     "&.cm-editor.cm-focused": {
       outline: "none",
@@ -40,12 +40,13 @@ function App() {
 
   return (
     <>
+      <div className="fixed inset-0 bg-custom-gradient"></div>
       <img
         src={heroBackground}
         className="object-cover absolute -z-5 w-full min-h-[70svh]"
         alt="Hero Background"
       />
-      <div className="flex flex-col items-center h-full">
+      <div className="flex flex-col items-center h-full mb-10">
         <header className="relative z-5 mt-10 flex flex-col gap-8 items-center">
           <img src={noteCodeLogo} alt="Note Code Logo" />
           <h2 className="text-2xl font-semibold">Create & Share</h2>
@@ -60,21 +61,23 @@ function App() {
               onChange={(value) => setCode(value)}
             />
           </section>
-          <footer className="mt-auto flex">
-            <DropdownButton
-              options={allLanguages}
-              onSelect={(value) => setLanguage(value as LanguageName)}
-            />
-            <DropdownButton
-              options={allThemes}
-              onSelect={(value) =>
-                setTheme(value as "light" | "dark" | Extension)
-              }
-            />
-            <div className="ml-auto flex gap-5 items-center justify-center">
-              <div className="flex gap-2 cursor-pointer hover:text-gray-400 transition-colors duration-300">
+          <footer className="mt-auto flex xsm:flex-row flex-col xsm:items-center">
+            <div className="flex justify-between xsm:mb-0 mb-4 xsm:gap-4">
+              <DropdownButton
+                options={allLanguages}
+                onSelect={(value) => setLanguage(value as LanguageName)}
+              />
+              <DropdownButton
+                options={allThemes}
+                onSelect={(value) =>
+                  setTheme(value as "light" | "dark" | Extension)
+                }
+              />
+            </div>
+            <div className="xsm:ml-auto flex gap-5 items-center justify-between">
+              <div className=" flex gap-2 cursor-pointer hover:text-gray-400 transition-colors duration-300">
                 <img src={linkIcon} alt="Copy to Clipboard" />
-                <span>http://localhost:5173/</span>
+                <span>.../28xusy23</span>
               </div>
               <div className="cursor-pointer px-3 py-1 bg-gray-500 rounded-2xl flex gap-2 text-white hover:bg-slate-500/80 transition-colors duration-300">
                 <img src={shareIcon} alt="Share" />

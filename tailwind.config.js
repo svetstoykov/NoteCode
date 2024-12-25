@@ -11,8 +11,11 @@ export default {
           "linear-gradient(to bottom right, rgba(183, 135, 245, 1), rgba(116, 62, 228, 1))",
       },
       colors: {
-        "dark-gray": "#282C34"
-      }
+        "dark-gray": "#282C34",
+      },
+      screens: {
+        xsm: "500px",
+      },
     },
   },
   plugins: [],
