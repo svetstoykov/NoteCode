@@ -26,11 +26,10 @@ const MainPage = () => {
   useEffect(() => {
     if (id !== undefined) {
       loadSharedCode(id);
-      return;
+    } else {
+      setCode(defaultCode);
     }
-
-    setCode(defaultCode);
-  }, [id]);
+  }, [id, setCode]);
 
   const customTheme = EditorView.theme({
     ".cm-gutters": {
@@ -90,12 +89,13 @@ const MainPage = () => {
     try {
       setIsLoading(true);
 
+      console.log("In loading....");
+
       // Add additional delay, for better animations
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const item = await getData<ICodeShareItem>(id);
-      if (item == null) {
-        toast.error("Could not locate code share!");
+      if (item === null) {
         return;
       }
 

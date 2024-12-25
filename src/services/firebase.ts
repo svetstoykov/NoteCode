@@ -1,5 +1,6 @@
 // src/services/firebase.ts
 import { initializeApp } from "firebase/app";
+import { getAuth, signInAnonymously } from "firebase/auth";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { toast } from "react-toastify";
 
@@ -15,9 +16,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+const auth = getAuth(app);
+
+// Ensure authentication before database operations
+const ensureAuth = async () => {
+  if (!auth.currentUser) {
+    await signInAnonymously(auth);
+  }
+};
 
 export const saveData = async <T>(id: string, data: T): Promise<void> => {
   try {
+    await ensureAuth();
     const dbRef = ref(database, `notecode/${id}`);
     await set(dbRef, data);
     toast.success("Link Generated!");
@@ -28,6 +38,7 @@ export const saveData = async <T>(id: string, data: T): Promise<void> => {
 
 export const getData = async <T>(id: string): Promise<T | null> => {
   try {
+    await ensureAuth();
     const dbRef = ref(database, `notecode/${id}`);
     const snapshot = await get(dbRef);
     return snapshot.exists() ? (snapshot.val() as T) : null;
