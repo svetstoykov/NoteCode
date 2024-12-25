@@ -59,7 +59,7 @@ const DropdownButton = ({
 
       <div
         className={`absolute bottom-full mb-1 bg-white rounded-lg shadow-lg min-w-[100px] max-h-[300px] overflow-y-auto transition-all duration-300 ${
-          isOpen ? "opacity-100 max-h-[300px]" : "opacity-0 max-h-0"
+          isOpen ? "opacity-100 max-h-[300px] h-auto" : "opacity-0 max-h-0 h-0"
         }`}
       >
         {options.map((option) => (

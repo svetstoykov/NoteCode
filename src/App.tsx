@@ -2,7 +2,7 @@ import heroBackground from "../src/assets/Hero-Background-notecode.svg";
 import noteCodeLogo from "../src/assets/NoteCodeLogo.svg";
 import shareIcon from "../src/assets/Share.svg";
 import linkIcon from "../src/assets/link.svg";
-import CodeMirror, { EditorView, Extension } from "@uiw/react-codemirror";
+import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import {
   LanguageName,
   loadLanguage,
@@ -15,11 +15,11 @@ import DropdownButton, { IDropdownOption } from "./components/DropdownButton";
 function App() {
   const [code, setCode] = useState(htmlCode);
   const [language, setLanguage] = useState<LanguageName>("html");
-  const [theme, setTheme] = useState<"light" | "dark" | "none" | Extension>(
-    "light"
-  );
+  const [isDarkTheme, setDarkTheme] = useState(false);
 
-  const allLanguages: IDropdownOption[] = Object.keys(langs).map((l) => ({
+  const allLanguages: IDropdownOption[] = Object.keys(langs)
+  .sort()
+  .map((l) => ({
     label: l,
     value: l,
   }));
@@ -32,6 +32,11 @@ function App() {
   const customTheme = EditorView.theme({
     ".cm-gutters": {
       backgroundColor: "white",
+    },
+    "&.cm-editor": {
+      transitionProperty: "color, background-color, border-color, text-decoration-color, fill, stroke",
+      transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+      transitionDuration: "150ms",
     },
     "&.cm-editor.cm-focused": {
       outline: "none",
@@ -52,11 +57,15 @@ function App() {
           <h2 className="text-2xl font-semibold">Create & Share</h2>
           <h1 className="text-4xl font-semibold">Your Code easily</h1>
         </header>
-        <main className="flex flex-col p-5 mt-10 relative z-10 w-[calc(100%-5rem)] max-w-[800px] min-h-[700px] rounded-xl bg-white">
+        <main
+          className={`flex flex-col p-5 mt-10 relative z-10 w-[calc(100%-5rem)] max-w-[800px] min-h-[700px] rounded-xl transition-colors ${
+            isDarkTheme ? "bg-dark-gray" : "bg-white"
+          }`}
+        >
           <section className="">
             <CodeMirror
               value={code}
-              theme={theme}
+              theme={isDarkTheme ? "dark" : "light"}
               extensions={[loadLanguage(language)!, customTheme]}
               onChange={(value) => setCode(value)}
             />
@@ -64,18 +73,19 @@ function App() {
           <footer className="mt-auto flex xsm:flex-row flex-col xsm:items-center">
             <div className="flex justify-between xsm:mb-0 mb-4 xsm:gap-4">
               <DropdownButton
+                initialValue="html"
                 options={allLanguages}
                 onSelect={(value) => setLanguage(value as LanguageName)}
               />
               <DropdownButton
                 options={allThemes}
                 onSelect={(value) =>
-                  setTheme(value as "light" | "dark" | Extension)
+                  setDarkTheme(value === "light" ? false : true)
                 }
               />
             </div>
             <div className="xsm:ml-auto flex gap-5 items-center justify-between">
-              <div className=" flex gap-2 cursor-pointer hover:text-gray-400 transition-colors duration-300">
+              <div className=" flex gap-2 cursor-pointer text-gray-400 hover:opacity-80 transition-all duration-300">
                 <img src={linkIcon} alt="Copy to Clipboard" />
                 <span>.../28xusy23</span>
               </div>
