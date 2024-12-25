@@ -3,7 +3,7 @@ import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import { useEffect, useState } from "react";
 import { htmlCode as defaultCode } from "../common/constants";
 import { ICodeShareItem } from "../common/models";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { saveData, getData } from "../services/firebase";
 import { generateUniqueId } from "../services/idGenerator";
 import Footer from "./Footer";
@@ -18,6 +18,8 @@ const MainPage = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [itemId, setItemId] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
+  const [hasMadeChanges, setHasMadeChanges] = useState(false);
+  const [currentItem, setCurrentItem] = useState<ICodeShareItem | undefined>();
 
   const { id } = useParams();
 
@@ -45,8 +47,29 @@ const MainPage = () => {
     },
   });
 
+  const handleCodeChange = (code: string) => {
+    setCode(code);
+
+    if (id === undefined && code === defaultCode) {
+      setHasMadeChanges(false);
+    } else if (
+      id !== undefined &&
+      currentItem &&
+      currentItem.content === code
+    ) {
+      setHasMadeChanges(false);
+    } else {
+      setHasMadeChanges(true);
+    }
+  };
+
   const handleSave = async () => {
     try {
+      if (!code || code.trim().length === 0) {
+        toast.error("Code snippet is empty!");
+        return;
+      }
+
       const id = generateUniqueId(10);
       const item = {
         content: code,
@@ -66,12 +89,13 @@ const MainPage = () => {
   const loadSharedCode = async (id: string) => {
     try {
       setIsLoading(true);
-      // Simulate API call with setTimeout
+
+      // Add additional delay, for better animations
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const item = await getData<ICodeShareItem>(id);
       if (item == null) {
-        console.log("Item is null");
+        toast.error("Could not locate code share!");
         return;
       }
 
@@ -79,6 +103,7 @@ const MainPage = () => {
       setCode(item.content);
       setTheme(item.theme as "light" | "dark");
       setLanguage(item.language as LanguageName);
+      setCurrentItem(item);
       setIsLoading(false);
     } catch (error) {
       console.error("Error retrieving item:", error);
@@ -103,7 +128,7 @@ const MainPage = () => {
           <section className="flex justify-center items-center flex-grow overflow-auto pb-3 rounded-md">
             {isLoading ? (
               <MutatingDots
-                wrapperStyle={{ paddingTop: "5rem" }}
+                wrapperStyle={{ paddingTop: "3rem" }}
                 visible={true}
                 height="100"
                 width="100"
@@ -118,7 +143,7 @@ const MainPage = () => {
                   value={code}
                   theme={theme}
                   extensions={[loadLanguage(language)!, customTheme]}
-                  onChange={(value) => setCode(value)}
+                  onChange={(value) => handleCodeChange(value)}
                 />
               </div>
             )}
@@ -130,6 +155,7 @@ const MainPage = () => {
             itemId={itemId}
             theme={theme}
             language={language}
+            hasMadeChanges={hasMadeChanges}
           />
         </main>
       </div>

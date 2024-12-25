@@ -12,6 +12,7 @@ interface IFooterProps {
   itemId?: string;
   theme?: "light" | "dark";
   language: LanguageName;
+  hasMadeChanges: boolean;
 }
 
 const Footer = ({
@@ -21,6 +22,7 @@ const Footer = ({
   itemId,
   language,
   theme,
+  hasMadeChanges,
 }: IFooterProps) => {
   const allLanguages: IDropdownOption[] = Object.keys(langs)
     .sort()
@@ -55,9 +57,7 @@ const Footer = ({
         <DropdownButton
           initialValue={typeof theme === "string" ? theme : "light"}
           options={allThemes}
-          onSelect={(value) =>
-            onSelectTheme(value as "light" | "dark")
-          }
+          onSelect={(value) => onSelectTheme(value as "light" | "dark")}
         />
       </div>
       <div className="xsm:ml-auto flex gap-5 items-center justify-between">
@@ -70,13 +70,18 @@ const Footer = ({
             <span>.../{itemId}</span>
           </div>
         )}
-        <div
-          className="cursor-pointer px-3 py-1 bg-gray-500 rounded-2xl flex gap-2 text-white hover:bg-slate-500/80 transition-colors duration-300"
+        <button
+          className={`px-3 py-1 bg-gray-500 rounded-2xl flex items-center gap-2 ${
+            !hasMadeChanges
+              ? "opacity-70"
+              : "hover:bg-slate-500/80 transition-colors duration-300"
+          } text-white `}
           onClick={onClickShare}
+          disabled={!hasMadeChanges}
         >
           <img src={shareIcon} alt="Share" />
-          <button className="text-lg">Share</button>
-        </div>
+          <span>Share</span>
+        </button>
       </div>
     </footer>
   );
