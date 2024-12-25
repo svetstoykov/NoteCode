@@ -2,7 +2,7 @@ import heroBackground from "../src/assets/Hero-Background-notecode.svg";
 import noteCodeLogo from "../src/assets/NoteCodeLogo.svg";
 import shareIcon from "../src/assets/Share.svg";
 import linkIcon from "../src/assets/link.svg";
-import CodeMirror, { EditorView } from "@uiw/react-codemirror";
+import CodeMirror, { EditorView, Extension } from "@uiw/react-codemirror";
 import {
   LanguageName,
   loadLanguage,
@@ -11,18 +11,24 @@ import {
 import { useState } from "react";
 import { htmlCode } from "./common/constants";
 import DropdownButton, { IDropdownOption } from "./components/DropdownButton";
+import { getData, saveData } from "./services/firebase";
+import { generateUniqueId } from "./services/idGenerator";
+import { ToastContainer } from "react-toastify";
+import { ICodeShareItem } from "./common/models";
 
 function App() {
   const [code, setCode] = useState(htmlCode);
   const [language, setLanguage] = useState<LanguageName>("html");
-  const [isDarkTheme, setDarkTheme] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark" | Extension>("light");
+  const [savedItem, setSavedItem] = useState<ICodeShareItem | null>(null);
+  const [itemId, setItemId] = useState<string | null>(null);
 
   const allLanguages: IDropdownOption[] = Object.keys(langs)
-  .sort()
-  .map((l) => ({
-    label: l,
-    value: l,
-  }));
+    .sort()
+    .map((l) => ({
+      label: l,
+      value: l,
+    }));
 
   const allThemes: IDropdownOption[] = ["light", "dark"].map((t) => ({
     label: t,
@@ -34,7 +40,8 @@ function App() {
       backgroundColor: "white",
     },
     "&.cm-editor": {
-      transitionProperty: "color, background-color, border-color, text-decoration-color, fill, stroke",
+      transitionProperty:
+        "color, background-color, border-color, text-decoration-color, fill, stroke",
       transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
       transitionDuration: "150ms",
     },
@@ -42,6 +49,41 @@ function App() {
       outline: "none",
     },
   });
+
+  const handleSave = async () => {
+    try {
+      const id = generateUniqueId(10);
+      const item = {
+        content: code,
+        language: language,
+        theme: theme,
+      };
+
+      const savedData = await saveData<ICodeShareItem>(id, item);
+
+      console.log(savedData);
+      setSavedItem(item);
+      setItemId(id);
+    } catch (error) {
+      console.error("Error saving item:", error);
+    }
+  };
+
+  const handleGet = async (id: string) => {
+    try {
+      const item = await getData<ICodeShareItem>(id);
+      if (item == null) {
+        console.log("Item is null");
+        return;
+      }
+
+      setCode(item.content);
+      setTheme(item.theme as "light" | "dark" | Extension);
+      setLanguage(item.language as LanguageName);
+    } catch (error) {
+      console.error("Error retrieving item:", error);
+    }
+  };
 
   return (
     <>
@@ -59,13 +101,13 @@ function App() {
         </header>
         <main
           className={`flex flex-col p-5 mt-10 relative z-10 w-[calc(100%-5rem)] max-w-[800px] min-h-[700px] rounded-xl transition-colors ${
-            isDarkTheme ? "bg-dark-gray" : "bg-white"
+            theme === "dark" ? "bg-dark-gray" : "bg-white"
           }`}
         >
           <section className="">
             <CodeMirror
               value={code}
-              theme={isDarkTheme ? "dark" : "light"}
+              theme={theme}
               extensions={[loadLanguage(language)!, customTheme]}
               onChange={(value) => setCode(value)}
             />
@@ -80,16 +122,21 @@ function App() {
               <DropdownButton
                 options={allThemes}
                 onSelect={(value) =>
-                  setDarkTheme(value === "light" ? false : true)
+                  setTheme(value as "light" | "dark" | Extension)
                 }
               />
             </div>
             <div className="xsm:ml-auto flex gap-5 items-center justify-between">
-              <div className=" flex gap-2 cursor-pointer text-gray-400 hover:opacity-80 transition-all duration-300">
-                <img src={linkIcon} alt="Copy to Clipboard" />
-                <span>.../28xusy23</span>
-              </div>
-              <div className="cursor-pointer px-3 py-1 bg-gray-500 rounded-2xl flex gap-2 text-white hover:bg-slate-500/80 transition-colors duration-300">
+              {itemId && (
+                <div className=" flex gap-2 cursor-pointer text-gray-400 hover:opacity-80 transition-all duration-300">
+                  <img src={linkIcon} alt="Copy to Clipboard" />
+                  <span>.../{itemId}</span>
+                </div>
+              )}
+              <div
+                className="cursor-pointer px-3 py-1 bg-gray-500 rounded-2xl flex gap-2 text-white hover:bg-slate-500/80 transition-colors duration-300"
+                onClick={() => handleSave()}
+              >
                 <img src={shareIcon} alt="Share" />
                 <button className="text-lg">Share</button>
               </div>
@@ -97,6 +144,7 @@ function App() {
           </footer>
         </main>
       </div>
+      <ToastContainer />
     </>
   );
 }

@@ -1,22 +1,19 @@
-export const htmlCode: string = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dummy HTML Page</title>
-</head>
-<body>
-    <header>
-        <h1>Welcome to the Dummy Page</h1>
-        <p>Your placeholder content goes here.</p>
-    </header>
-    <main>
-        <section>
-            <h2>About</h2>
-            <p>This is a dummy section with some text.</p>
-        </section>p>
-        </section>
-    </main>
-</body>
+export const htmlCode: string = `<html>
+  <head>
+    <title>HTML Sample</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style type="text/css">
+      h1 {
+        color: #CCA3A3;
+      }
+    </style>
+    <script type="text/javascript">
+      alert("I am a sample... visit devChallengs.io for more projects");
+    </script>
+  </head>
+  <body>
+    <h1>Heading No.1</h1>
+    <input disabled type="button" value="Click me" />
+  </body>
 </html>
 `;
