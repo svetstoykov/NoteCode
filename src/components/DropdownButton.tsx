@@ -1,10 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import arrowIcon from "../assets/down arrow.svg";
-
-export interface IDropdownOption {
-  label: string;
-  value: string;
-}
+import { IDropdownOption } from "../common/models";
 
 interface IDropdownButtonProps {
   options: IDropdownOption[];
@@ -18,8 +14,16 @@ const DropdownButton = ({
   initialValue,
 }: IDropdownButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(initialValue || options[0]?.value);
+  const [selected, setSelected] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initialValue !== null) {
+      setSelected(initialValue!);
+    } else {
+      setSelected(options[0]?.value);
+    }
+  }, [setSelected, initialValue, options]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,15 +45,13 @@ const DropdownButton = ({
     setIsOpen(false);
   };
 
-  const selectedLabel = options.find((opt) => opt.value === selected)?.label;
-
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="px-4 py-1 rounded-2xl items-center justify-center flex bg-gray-300 hover:bg-gray-300/80 transition-colors duration-300"
       >
-        <span className="text-sm">{selectedLabel}</span>
+        <span className="text-sm">{selected}</span>
         <img
           src={arrowIcon}
           alt=""

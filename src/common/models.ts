@@ -6,3 +6,8 @@ export interface ICodeShareItem {
   theme: "light" | "dark" | Extension,
   language: string
 }
+
+export interface IDropdownOption {
+  label: string;
+  value: string;
+}
