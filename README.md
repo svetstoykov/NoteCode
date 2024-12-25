@@ -1,50 +1,96 @@
-# React + TypeScript + Vite
+# NoteCode
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Project Header Image](./src/assets/challenge-56-thumbnail.jpeg) <!-- Add your project screenshot or header image here -->
 
-Currently, two official plugins are available:
+## Live Site
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[Live Site URL](https://neon-malabi-e46535.netlify.app) <!-- Add your live site URL here -->
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **React**: A JavaScript library for building user interfaces.
+- **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
+- **Vite**: A fast build tool and development server for modern web projects.
+- **Firebase**: A platform developed by Google for creating mobile and web applications.
+  - **Authentication**: Used for anonymous user authentication.
+  - **Realtime Database**: Used for storing and retrieving code snippets.
+- **React Router**: A collection of navigational components that compose declaratively with your application.
+- **CodeMirror**: A versatile text editor implemented in JavaScript for the browser.
+- **React Toastify**: A library for notifications in React applications.
+- **React Loader Spinner**: A library for loading spinners in React applications.
 
-- Configure the top-level `parserOptions` property like this:
+## Features
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Create and share code snippets easily.
+- Choose from various programming languages.
+- Switch between light and dark themes.
+- Copy shareable links to clipboard.
+- Save and retrieve code snippets from Firebase.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Setup and Installation
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Prerequisites
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+
+### Installation
+
+1. **Clone the repository:**
+
+    ```sh
+    git clone https://github.com/svetstoykov/NoteCode.git
+    cd NoteCode
+    ```
+
+2. **Install dependencies:**
+
+    ```sh
+    npm install
+    ```
+
+3. **Set up Firebase:**
+
+    - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
+    - Enable Firebase Authentication (Anonymous).
+    - Create a Realtime Database.
+    - Obtain your Firebase configuration and add it to a `.env` file in the root of your project:
+
+    ```env
+    VITE_FIREBASE_API_KEY=your_api_key
+    VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+    VITE_FIREBASE_DATABASE_URL=your_database_url
+    VITE_FIREBASE_PROJECT_ID=your_project_id
+    VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+    VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+    VITE_FIREBASE_APP_ID=your_app_id
+    ```
+
+4. **Run the development server:**
+
+    ```sh
+    npm run dev
+    ```
+
+5. **Build for production:**
+
+    ```sh
+    npm run build
+    ```
+
+6. **Preview the production build:**
+
+    ```sh
+    npm run serve
+    ```
+
+## Folder Structure
+
+- `src/components`: Contains React components like `Header`, `Footer`, and `MainPage`.
+- `src/services`: Contains service files like `firebase.ts` for Firebase operations.
+- `src/assets`: Contains static assets like images and logos.
+- `src/common`: Contains common constants and models.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
